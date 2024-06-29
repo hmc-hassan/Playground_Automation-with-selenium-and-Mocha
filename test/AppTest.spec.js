@@ -63,11 +63,11 @@ const { url, username, password } = config;
         try {
             //await Login(driver);
             const color = await ValidateLogin(driver);
-            if (color.includes('40, 167, 69, 1')) {
+            if (color.includes('40, 167, 69')) {
                 console.log("Welcome " + username);
                 await Login(driver);
                 const color = await ValidateLogin(driver);
-                if (color.includes('23, 162, 184, 1')) {
+                if (color.includes('23, 162, 184')) {
                         console.log("User logged out.");
                         await takeScreenshot(driver, 'Logout');
                         await navigatebackToHomepage(driver);
