@@ -1,0 +1,12 @@
+{
+    "test": {
+            "url": "http://www.uitestingplayground.com/",
+            "username": "Test",
+            "password": "pwd"
+},
+    "stage": {
+        "url": "http://www.uitestingplayground.com/",
+        "username": "Stage",
+        "password": "pwd"
+    }
+}

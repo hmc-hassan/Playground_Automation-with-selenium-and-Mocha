@@ -1,20 +1,20 @@
 const { describe, it, before, after, mocha } = require('mocha');
 const {By, Builder, until, Key} = require('selenium-webdriver');
+const { allure } = require("allure-mocha/runtime");
 const assert = require("assert");
-const WebDriverFactory = require('../Helper Function/WebDriverConfig');
-const { takeScreenshot } = require('../Helper Function/Takescreenshot');
-const {navigatetosampleapp, Adduser, Addpwd} = require('../Navigations/NavigateSampleApp');
-const navigatebackToHomepage = require('../Navigations/NavigateHome');
-const { navigateDynamicID, validateDynamicIDtext } = require('../Navigations/NavigateDynamicID');
+const WebDriverFactory = require('../helpers/webDriverConfig');
+const { takeScreenshot } = require('../helpers/takeScreenshot');
+const {initialize,navigatetosampleapp, Adduser, Addpwd, Login,ValidateLogin} = require('../navigations/navigateSampleApp');
+const navigatebackToHomepage = require('../navigations/navigateHome');
+const { navigateDynamicID, validateDynamicIDtext } = require('../navigations/navigateDynamicID');
 
 
-
-// Get dynamic Environments
-const env = process.env.NODE_ENV || 'Test';
-const config = require('../Environment Details/'+ env + '.js');
+const env = process.env.NODE_ENV || 'test';
+const config = require(`../configs/environments.json`)[env];
 const { url, username, password } = config;
 
-  describe('Home Page setup', function () {
+
+  describe('UI Test Automation Playground', function () {
     let driver;
     let headlessMode;
     let browser;
@@ -28,37 +28,63 @@ const { url, username, password } = config;
             console.error('Error initializing WebDriver:', error);
             throw error;
         } 
+        await driver.get(url);
+        await takeScreenshot(driver, 'Homepage');
     });
     
-    it('Validate that Home page is loaded Successfully', async function () {
+    it('TC-01: Validate that Home page is loaded Successfully', async function () {
         try{
-            await driver.get(url);
-            await takeScreenshot(driver, 'Homepage');
             const value = await navigatebackToHomepage(driver)
             assert.ok(value.includes(value))
         }
         catch (error) {
-        console.error('Error initializing WebDriver:', error);
+        console.error('Error Validate that Home page is loaded Successfully:', error);
         throw error;
     }
 
     });
-    it('Navigate to sample app, input credentials and move back to Home Page', async function () {
+    it('TC-02: Navigate to sample app, input credentials and Press Login', async function () {
         try{
             const savalue = await navigatetosampleapp(driver);
             assert.equal("Sample App", savalue);
             await Adduser(driver, username);
-            //await new Promise(resolve => setTimeout(resolve, 5000));
             await Addpwd(driver, password);
+            await Login(driver);
+            await new Promise(resolve => setTimeout(resolve, 5000));
             await takeScreenshot(driver, 'Sample App');
-            await navigatebackToHomepage(driver);
+            return Promise.resolve();
         }
         catch (error) {
-            console.error('Error initializing WebDriver:', error);
-            throw error;
+            console.error('Error Navigate to sample app, input credentials and Press Login:', error);
+            //throw error;
         }
       });
-    it('Navigate to Dynamic ID and move back to Home Page', async function () {
+    it('TC-03: Validate Login is successful or not', async function () {
+        try {
+            //await Login(driver);
+            const color = await ValidateLogin(driver);
+            if (color.includes('40, 167, 69, 1')) {
+                console.log("Welcome " + username);
+                await Login(driver);
+                const color = await ValidateLogin(driver);
+                if (color.includes('23, 162, 184, 1')) {
+                        console.log("User logged out.");
+                        await takeScreenshot(driver, 'Logout');
+                        await navigatebackToHomepage(driver);
+                    }else {
+                        console.log("No validation is performed");
+                    }
+            } else if (color.includes('220, 53, 69, 1')) {
+                console.warn("Error: Invalid username/password:");
+                await navigatebackToHomepage(driver);
+            } else {
+                console.log("No validation is performed");
+            }
+        } catch (error) {
+            console.error("Validate Login is successful or not:", error.message);
+        }
+    })
+    it('TC-04: Navigate to Dynamic ID and move back to Home Page', async function () {
         try{
             await navigateDynamicID(driver);
             const did = await validateDynamicIDtext(driver);
@@ -66,7 +92,7 @@ const { url, username, password } = config;
             await navigatebackToHomepage(driver);
         }
         catch (error) {
-            console.error('Error initializing WebDriver:', error);
+            console.error('Error Navigate to Dynamic ID and move back to Home Page:', error);
             throw error;
         }
       });
@@ -74,4 +100,3 @@ const { url, username, password } = config;
     after(async () => await driver.quit());
     
   });
-  

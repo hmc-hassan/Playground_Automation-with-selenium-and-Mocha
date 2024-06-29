@@ -1,4 +1,4 @@
-const Home = require('../POM/PO_Homepage');
+const Home = require('../pageObjects/homePage');
 
 async function navigateHome(driver){
     const vhome = new Home(driver);

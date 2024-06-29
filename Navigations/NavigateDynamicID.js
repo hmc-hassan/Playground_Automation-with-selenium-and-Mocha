@@ -1,5 +1,5 @@
-const Home = require('../POM/PO_Homepage');
-const DynamicID = require('../POM/PO_DynamicID');
+const Home = require('../pageObjects/homePage');
+const DynamicID = require('../pageObjects/dynamicIDPage');
 
 async function navigateDynamicID(driver){
     const vhome = new Home(driver);
