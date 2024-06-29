@@ -62,7 +62,7 @@ const { url, username, password } = config;
     it('TC-03: Validate Login is successful or not', async function () {
         try {
             //await Login(driver);
-            const color = await ValidateLogin(driver);
+            const color = await ValidateLogin(driver):
             if (color.includes('40, 167, 69')) {
                 console.log("Welcome " + username);
                 await Login(driver);
