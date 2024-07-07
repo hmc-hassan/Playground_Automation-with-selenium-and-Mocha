@@ -1,4 +1,4 @@
-const sampleapp = require('../pageObjects/sampleAppPage');
+const sampleapp = require('../UI_Objects/sampleAppPage');
 
 let sampleAppInstance;
 

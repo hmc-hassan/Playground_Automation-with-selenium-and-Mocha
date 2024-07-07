@@ -1,4 +1,4 @@
-const Home = require('../pageObjects/homePage');
+const Home = require('../UI_Objects/homePage');
 
 async function navigateHome(driver){
     const vhome = new Home(driver);

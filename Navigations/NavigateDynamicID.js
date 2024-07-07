@@ -1,5 +1,5 @@
-const Home = require('../pageObjects/homePage');
-const DynamicID = require('../pageObjects/dynamicIDPage');
+const Home = require('../UI_Objects/homePage');
+const DynamicID = require('../UI_Objects/dynamicIDPage');
 
 async function navigateDynamicID(driver){
     const vhome = new Home(driver);
@@ -13,7 +13,15 @@ async function validateDynamicIDtext(driver){
     await new Promise(resolve => setTimeout(resolve, 100));
     return titletext
 };
+async function clickButtonDid(driver){
+    const cdid = new DynamicID(driver);
+    await cdid.clickButton
+    const buttonId = await cdid.getAttribute('class');
+    await new Promise(resolve => setTimeout(resolve, 100));
+    return buttonId
+};
 module.exports = {
     navigateDynamicID,
-    validateDynamicIDtext
+    validateDynamicIDtext,
+    clickButtonDid
 };
